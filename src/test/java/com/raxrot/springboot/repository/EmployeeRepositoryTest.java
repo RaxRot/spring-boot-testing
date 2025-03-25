@@ -17,8 +17,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class EmployeeRepositoryTest {
 
     @Autowired
-    private EmployeeRepository employeeRepository;
-
+    private  EmployeeRepository employeeRepository;
     private Employee employee;
     @BeforeEach
     void setUp() {
