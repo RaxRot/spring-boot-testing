@@ -1,6 +1,7 @@
 package com.raxrot.springboot.repository;
 
 import com.raxrot.springboot.entity.Employee;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,19 @@ public class EmployeeRepositoryTest {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @DisplayName("Junit test for save employee")
-    @Test
-    public void givenEmployeeObject_whenSave_thenReturnSavedEmployee() {
-        Employee employee = Employee.builder()
+    private Employee employee;
+    @BeforeEach
+    void setUp() {
+        employee = Employee.builder()
                 .firstName("Vlad")
                 .lastName("Bulahov")
                 .email("vladbulahov@gmail.com")
                 .build();
+    }
+
+    @DisplayName("Junit test for save employee")
+    @Test
+    public void givenEmployeeObject_whenSave_thenReturnSavedEmployee() {
 
         Employee savedEmployee = employeeRepository.save(employee);
 
@@ -64,11 +70,7 @@ public class EmployeeRepositoryTest {
     @DisplayName("Junit test for get employee by id")
     @Test
     public void givenEmployeeObject_whenFindById_thenReturnEmployeeObject() {
-        Employee employee = Employee.builder()
-                .firstName("Vlad")
-                .lastName("Bulahov")
-                .email("vladbulahov@gmail.com")
-                .build();
+
         employeeRepository.save(employee);
 
         Employee employeeDB = employeeRepository.findById(employee.getId()).get();
@@ -81,11 +83,7 @@ public class EmployeeRepositoryTest {
     @DisplayName("Junit test for find employee by email")
     @Test
     public void givenEmployeeEmail_whenFindByEmail_thenReturnEmployeeObject() {
-        Employee employee = Employee.builder()
-                .firstName("Vlad")
-                .lastName("Bulahov")
-                .email("vladbulahov@gmail.com")
-                .build();
+
         employeeRepository.save(employee);
         Employee employeeDB = employeeRepository.findByEmail(employee.getEmail()).get();
         assertThat(employeeDB).isNotNull();
@@ -116,11 +114,6 @@ public class EmployeeRepositoryTest {
     @DisplayName("Junit test for delete employee")
     @Test
     public void givenEmployeeObject_whenDelete_thenRemovedEmployee() {
-        Employee employee = Employee.builder()
-                .firstName("Vlad")
-                .lastName("Bulahov")
-                .email("vladbulahov@gmail.com")
-                .build();
         employeeRepository.save(employee);
         long countBeforeDelete = employeeRepository.count();
         employeeRepository.deleteById(employee.getId());
@@ -128,6 +121,44 @@ public class EmployeeRepositoryTest {
         Optional<Employee> found = employeeRepository.findById(employee.getId());
         assertThat(found).isEmpty();
         assertThat(countBeforeDelete).isGreaterThan(countAfterDelete);
+    }
+
+    @DisplayName("Junit test for JPQL using index params")
+    @Test
+    public void givenFirstNameAndLastName_whenFindByJPQL_thenReturnEmployeeObject() {
+        employeeRepository.save(employee);
+        String firstName = "Vlad";
+        String lastName = "Bulahov";
+
+        Employee findByJPQL=employeeRepository.findEmployeeJPQL(firstName, lastName);
+        assertThat(findByJPQL).isNotNull();
+        assertThat(findByJPQL.getFirstName()).isEqualTo(firstName);
+    }
+
+    @DisplayName("Junit test for JPQL using named params")
+    @Test
+    public void givenFirstNameAndLastName_whenFindByJPQLNamedParams_thenReturnEmployeeObject() {
+        employeeRepository.save(employee);
+        String firstName = "Vlad";
+        String lastName = "Bulahov";
+        String email = "vladbulahov@gmail.com";
+
+        Employee findByJPQL=employeeRepository.findEmployeeJPQLNamedParameters(firstName, lastName);
+        assertThat(findByJPQL).isNotNull();
+        assertThat(findByJPQL.getEmail()).isEqualTo(email);
+    }
+
+    @DisplayName("Junit test for JPQL using named params")
+    @Test
+    public void givenFirstNameAndLastName_whenFindNativeSqlNamed_thenReturnEmployeeObject() {
+        employeeRepository.save(employee);
+        String firstName = "Vlad";
+        String lastName = "Bulahov";
+        String email = "vladbulahov@gmail.com";
+
+        Employee findByJPQL=employeeRepository.findEmployeeNativeSqlNamed(firstName, lastName);
+        assertThat(findByJPQL).isNotNull();
+        assertThat(findByJPQL.getEmail()).isEqualTo(email);
     }
 
 }
