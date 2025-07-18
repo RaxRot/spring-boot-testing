@@ -160,4 +160,13 @@ class EmployeeRepositoryTest {
         assertThat(employeeInDb).isNotNull();
         assertThat(employeeInDb.getId()).isGreaterThan(0);
     }
+    @Test
+    @DisplayName("Not found by id")
+    void whenGetByWrongId_thenReturnEmpty() {
+        //when
+        Optional<Employee> employeeOptional = employeeRepository.findById(100L);
+
+        //then
+        assertThat(employeeOptional).isNotPresent();
+    }
 }
