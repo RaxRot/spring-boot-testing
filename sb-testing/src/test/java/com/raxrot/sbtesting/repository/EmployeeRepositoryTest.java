@@ -1,6 +1,7 @@
 package com.raxrot.sbtesting.repository;
 
 import com.raxrot.sbtesting.entity.Employee;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +20,21 @@ class EmployeeRepositoryTest {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @Test
-    @DisplayName("Save employee")
-    void givenEmployee_whenSave_thenReturnEmployee() {
-        //given
-        Employee employee =  Employee.builder()
+    private Employee employee;
+
+    @BeforeEach
+    void setUp() {
+        employee =  Employee.builder()
                 .firstName("Vlad")
                 .lastName("Bulahov")
                 .email("vlad@gmail.com")
                 .build();
+    }
+
+    @Test
+    @DisplayName("Save employee")
+    void givenEmployee_whenSave_thenReturnEmployee() {
+
         //when
         Employee savedEmployee = employeeRepository.save(employee);
 
@@ -65,11 +72,6 @@ class EmployeeRepositoryTest {
     @DisplayName("Get employee by id")
      void givenEmployee_whenGetEmployeeById_thenReturnEmployee() {
         //given
-        Employee employee =  Employee.builder()
-                .firstName("Vlad")
-                .lastName("Bulahov")
-                .email("vlad@gmail.com")
-                .build();
         employeeRepository.save(employee);
 
         //when
@@ -83,11 +85,6 @@ class EmployeeRepositoryTest {
     @DisplayName("Get employee by email")
     void givenEmployee_whenGetEmployeeByEmail_thenReturnEmployee() {
         //given
-        Employee employee =  Employee.builder()
-                .firstName("Vlad")
-                .lastName("Bulahov")
-                .email("vlad@gmail.com")
-                .build();
         employeeRepository.save(employee);
 
         //when
@@ -102,11 +99,6 @@ class EmployeeRepositoryTest {
     @DisplayName("Update employee")
     void givenEmployee_whenUpdateEmployee_thenReturnEmployee() {
         //given
-        Employee employee =  Employee.builder()
-                .firstName("Vlad")
-                .lastName("Bulahov")
-                .email("vlad@gmail.com")
-                .build();
         employeeRepository.save(employee);
 
         //when
@@ -127,11 +119,6 @@ class EmployeeRepositoryTest {
     @DisplayName("Delete employee")
     void givenEmployee_whenDeleteEmployee_thenReturnEmployee() {
         //given
-        Employee employee =  Employee.builder()
-                .firstName("Vlad")
-                .lastName("Bulahov")
-                .email("vlad@gmail.com")
-                .build();
         employeeRepository.save(employee);
 
         //when
@@ -146,11 +133,6 @@ class EmployeeRepositoryTest {
     @DisplayName("JPQL")
     void givenEmployee_whenJPQL_thenReturnEmployee() {
         //given
-        Employee employee =  Employee.builder()
-                .firstName("Vlad")
-                .lastName("Bulahov")
-                .email("vlad@gmail.com")
-                .build();
        Employee savedEmployee = employeeRepository.save(employee);
 
         //when
